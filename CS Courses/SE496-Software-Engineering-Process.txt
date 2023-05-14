@@ -13,4 +13,3 @@
 201951639,Salman Mohammed Hussein, 79, Passed
 201800484,Leila Ali Abdeljawad, 68, Passed
 202193630,Omar Ali Al-Jabri, 19, Failed
-221008802,Abdelrahman Mohammed Hussain,95,Passed
