@@ -1,0 +1,15 @@
+191443285,Mohammed Ali Khalaf,81,Passed
+201598913,Abdulrahman Youssef Hamid,95,Passed
+211780019,Fatima Mahmoud Abdeljawad, 47, Failed
+221302874,Khalid Ahmed Hussein, 71, Passed
+231149542,Hussein Abdulrahman Mohammed, 35, Failed
+201362894,Reema Saleh Salem, 90, Passed
+221471108,Abdullah Ali Mohammed, 83, Passed
+192672421,Norhan Mohammed Khalil, 66, Passed
+221843790,Sara Mahmoud Saleh, 77, Passed
+201962209,Yasser Mahmoud Ali, 43, Failed
+232052506,Mohammed Mustafa Sadik, 92, Passed
+222321042,Fatima Ahmed Ali, 27, Failed
+201951639,Salman Mohammed Hussein, 79, Passed
+201800484,Leila Ali Abdeljawad, 68, Passed
+202193630,Omar Ali Al-Jabri, 19, Failed
