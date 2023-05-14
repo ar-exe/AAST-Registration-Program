@@ -8,9 +8,7 @@
 char line[255];
 char d[] = ","; // delimeter
 int studentID, PIN;
-char *Student_info(int id)
-
-{
+char *Student_info(int id){
     int currentLine;
 
     int wanted_Student = id;
@@ -276,8 +274,33 @@ char *Get_PIN(int id)
     fclose(fpointer);
     return NULL; // Student not found
 }
-char *Get_Status_of(int id,char course){
-    
+char* Get_Status_of(int id, char* course) {
+    // Construct the file path using the course name
+    char filePath[255];
+    snprintf(filePath, sizeof(filePath), "G:\\PS Project\\AAST-Registration-Program-1\\CS Courses\\%s.txt", course);
+
+    FILE* fpointer = fopen(filePath, "r");
+    if (fpointer == NULL) {
+        printf("Error opening file.\n");
+        return NULL; // Return NULL to indicate an error
+    }
+
+    char line[255];
+    char d[] = ",";
+    while (fgets(line, 255, fpointer)) {
+        char* ID = strtok(line, d);
+        int pID = atoi(ID);
+        if (id == pID) {
+            char* Name = strtok(NULL, d);
+            char* Result = strtok(NULL, d);
+            char* Status = strtok(NULL, d);
+            fclose(fpointer);
+            return Status;
+        }
+    }
+
+    fclose(fpointer);
+    return NULL; // Student not found
 }
 int main()
 {
