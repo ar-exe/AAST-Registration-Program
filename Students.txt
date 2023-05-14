@@ -1,0 +1,6 @@
+221008802,Abdelrahman Mohammed Hussain,College of Computing and Information Technology,2,Computer Science South Valley,15,3.4,A,253856
+221008720,Zeyad hamdy Abdo Hussien,College of Computing and Information Technology,2,Computer Science South Valley,15,2.5,C,549784
+221018151,Mohamed Elhussein Mohamed Gad,College of Computing and Information Technology,2,Computer Science South Valley,15,2.7,A,956483
+221008756,Kareem Mohamed Youssef Ahmed,College of Computing and Information Technology,2,Computer Science South Valley,15,3.3,A,214365
+221008565,Martin Maged Fouad Gerges,College of Computing and Information Technology,2,Computer Science South Valley,15,3.2,A,759427
+
