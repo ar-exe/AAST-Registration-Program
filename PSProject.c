@@ -2,18 +2,34 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <stdint.h>
 #define o printf
 #define s scanf
 #define MAX_INFO_SIZE 255
 char line[255];
 char d[] = ","; // delimeter
 int studentID, PIN;
+void Student_Count(){
+        FILE *fpointer = fopen("Students.txt", "r");
+    int lineCount = 0;
+    int ch;
+    while ((ch = fgetc(fpointer)) != EOF)
+    {
+        if (ch == '\n')
+        {
+            lineCount++;
+        }
+    }
+    printf("%d students\n", lineCount-1);
+    fclose(fpointer);
+}
+
 char *Student_info(int id){
-    int currentLine;
+    int currentLine = 1;
 
     int wanted_Student = id;
 
-    FILE *fpointer = fopen("Students.txt", "r");
+    FILE *fpointer = fopen("G:\\PS Project\\AAST-Registration-Program-1\\Students.txt", "r");
     fgets(line, 255, fpointer);
     // divide line into tokens by delimiter
     char *ID = strtok(line, d);
@@ -96,7 +112,7 @@ char *Get_Period(int id)
     FILE *fpointer = fopen("Students.txt", "r");
     if (fpointer == NULL)
     {
-        printf("Error opening file.\n");
+        printf("Error opening file PERIOD.\n");
         return NULL; // Return NULL to indicate an error
     }
 
@@ -178,13 +194,13 @@ char *Get_Credits(int id)
     fclose(fpointer);
     return NULL; // Student not found
 }
-char *Get_GPA(int id)
+float Get_GPA(int id)
 {
     FILE *fpointer = fopen("Students.txt", "r");
     if (fpointer == NULL)
     {
         printf("Error opening file.\n");
-        return NULL; // Return NULL to indicate an error
+        return -1.0; // Return a special value to indicate an error
     }
 
     char line[255];
@@ -202,13 +218,14 @@ char *Get_GPA(int id)
             char *Credits = strtok(NULL, d);
             char *GPA = strtok(NULL, d);
             fclose(fpointer);
-            return GPA;
+            return atof(GPA); // Convert GPA string to float
         }
     }
 
     fclose(fpointer);
-    return NULL; // Student not found
+    return -1.0; // Student not found or error occurred
 }
+
 char *Get_FF(int id)
 {
     FILE *fpointer = fopen("Students.txt", "r");
@@ -243,7 +260,7 @@ char *Get_FF(int id)
 }
 char *Get_PIN(int id)
 {
-    FILE *fpointer = fopen("Students.txt", "r");
+    FILE *fpointer = fopen("G:\\PS Project\\AAST-Registration-Program-1\\Students.txt", "r");
     if (fpointer == NULL)
     {
         printf("Error opening file.\n");
@@ -281,7 +298,7 @@ char* Get_Status_of(int id, char* course) {
 
     FILE* fpointer = fopen(filePath, "r");
     if (fpointer == NULL) {
-        printf("Error opening file.\n");
+        printf("Error opening file STATUS.\n");
         return NULL; // Return NULL to indicate an error
     }
 
@@ -302,7 +319,398 @@ char* Get_Status_of(int id, char* course) {
     fclose(fpointer);
     return NULL; // Student not found
 }
-//choose from these:  
+
+
+
+
+int main()
+{
+    Student_Count();
+    int PASS, studentID, k = 0, choice, c, x;
+    int current_semester;
+// assigning current semester variable.
+    char *period = Get_Period(studentID);
+    int Current_semester;
+    if (period != NULL) {
+        int semester = atoi(period);
+        Current_semester = semester + 1;
+    } 
+    printf("\t\tWelcome to AAST Registration Program\n");
+    printf("1-Student\t\t2-Admin\n");
+    scanf("%d",&c);
+    if(c==1){
+        printf("1-Old Student\t\t2-New student\n");
+        s("%d",&x);
+    }
+    switch (x)
+    {
+        case 1:
+        o("Enter your Regisration Number: \n");
+        l:s("%d", &studentID);
+        o("Enter your pin: \n");
+        m:s("%d", &PASS);
+        system("cls");
+        FILE *fptr;
+        fptr = fopen("Students.txt", "r");
+        if (Get_PIN(studentID) == NULL)
+        {
+            o("Registration Number and Pin Code dose not matched.\nPlease type them correctly.\nPlease try to enter pin again");
+            goto m;
+        }
+        printf("Registration Number: %d", studentID);
+        printf("\nName: %s", Get_Name(studentID));
+        printf("\nCollege: %s", Get_College(studentID));
+        printf("\nDepartment: %s", Get_Department(studentID));
+        printf("\nPeriod: %s", Get_Period(studentID));
+        printf("\nTotal Achivement: %s", Get_Credits(studentID));
+        printf("\nGPA: %f", Get_GPA(studentID));
+        printf("\nFF: %s", Get_FF(studentID));
+        printf("\n\n");
+        printf("1-Register\t\t2-View Courses\t\t3-View Registered Courses\t\t4-View Transcript\n");
+        n:s("%d", &choice);
+int com;
+
+switch (choice)
+{
+    case 1: // Register
+        system("cls");
+        printf("%f\n", Get_GPA(studentID));
+        if (Get_GPA(studentID) >= 2)
+{
+
+
+            printf("You are allowed to register 7 Courses Maximum\n");
+            char *period = Get_Period(studentID);
+            if (period != NULL)
+            {
+                int semester = atoi(period);
+                current_semester = semester + 1;
+                printf("Current semester: %d\n", current_semester);
+            }
+
+           if (current_semester == 2) // Second semester
+            {
+                com = strcmp(Get_Status_of(studentID, "BA101-Calculus-1"), "Passed");
+                printf("%d\n", com);
+                if (com == 1)
+                    printf("1-BA102-Calculus-2\n");
+                
+                com = strcmp(Get_Status_of(studentID, "CS111-Introduction-to-Computers"), "Passed");
+                if (com == 1)
+                    printf("2-CS143-Introduction to problem solving and programming\n");
+                
+                com = strcmp(Get_Status_of(studentID, "BA113-Physics"), "Passed");
+                if (com == 1)
+                    printf("3-EC134-Fundamentals of Electronics\n");
+                
+                com = strcmp(Get_Status_of(studentID,"LH135-English-for-Specific-Purposes-I(ESP-I)"), "Passed");
+                if (com == 1)
+                    printf("4-LH136-English for Specific Purposes II(ESP II)\n5-NC133-Communication Skills\n");
+            }
+            else if (current_semester == 3) // Third semester
+            {
+             com = strcmp(Get_Status_of(studentID, "BA102-Calculus-2"), "Passed");
+             if (com == 1)
+             printf("1-BA102-Calculus-3\n2-BA203-Probability-and-Statistics\n");
+
+             com = strcmp(Get_Status_of(studentID, "BA113-Physics"), "Passed");
+             if (com == 1)
+            printf("3-BA216-Advanced-Physics\n");
+
+             com = strcmp(Get_Status_of(studentID, "CS111-Introduction-to-Computers"), "Passed");
+            if (com == 1)
+            printf("4-CE216-Digital-Logic-Design\n5-CS202-Discrete-Structures\n");
+
+            com = strcmp(Get_Status_of(studentID, "CS143-Introduction-to-Problem-Solving-and-Programming"), "Passed");
+            if (com == 1)
+            printf("6-CS243-Object-Oriented-Programming\n");
+            }
+            else if (current_semester == 4) // Fourth semester
+            {
+             com = strcmp(Get_Status_of(studentID, "CS143-Introduction-to-Problem-Solving-and-Programming"), "Passed");
+            if (com == 1)
+            printf("1-Introduction-to-Networks\n2-Database-Systems\n");
+
+            com = strcmp(Get_Status_of(studentID, "CE216-Digital-Logic-Design"), "Passed");
+            if (com == 1)
+            printf("3-CE243-Intro.-to-Computer-Architecture\n");
+
+            com = strcmp(Get_Status_of(studentID, "CS243-Object-Oriented-Programming"), "Passed");
+            if (com == 1)
+            printf("4-CS212-Data-Structures-and-Algorithms\n5-CS24-Advanced-Programming-Applications\n");
+
+            com = strcmp(Get_Status_of(studentID, "CS243-Object-Oriented-Programming"), "Passed");
+            int com2 = strcmp(Get_Status_of(studentID, "IS171-Introduction-to-Information-systems"), "Passed");
+            if (com == 1 && com2 == 1)
+            printf("6-SE291-Introduction-to-Software-Engineering\n");
+
+            printf("7-IT291-Professional-Training-in-Entrepreneurship\n");
+             }
+            else if (current_semester == 5) // fifth semester
+            {
+             com = strcmp(Get_Status_of(studentID, "BA203-Probability-and-Statistics"), "Passed");
+            if (com == 1)
+             printf("1-BA301-Advanced-Statistics\n");
+
+            com = strcmp(Get_Status_of(studentID, "BA102-Calculus-2"), "Passed");
+            if (com == 1)
+            printf("2-BA304-Linear-Algebra\n");
+
+            com = strcmp(Get_Status_of(studentID, "CS202-Discrete-Structures"), "Passed");
+            if (com == 1)
+            printf("3-CS311-Theory-of-Computation\n");
+
+            com = strcmp(Get_Status_of(studentID, "CS243-Object-Oriented-Programming"), "Passed");
+            int com2 = strcmp(Get_Status_of(studentID, "CE243-Intro.-to-Computer-Architecture"), "Passed");
+            if (com == 1 && com2 == 1)
+            printf("4-CS321-Systems-Programming\n");
+
+            com = strcmp(Get_Status_of(studentID, "IS273-Database-Systems"), "Passed");
+            if (com == 1)
+            printf("5-CS333-Web-Programming\n");
+
+            com = strcmp(Get_Status_of(studentID, "CS212-Data-Structures-and-Algorithms"), "Passed");
+            if (com == 1)
+            printf("6-CS352-Computer-Graphics\n");
+
+            printf("7-IT321-Professional-Training-in-Programming-I-(.Net-1)\n");
+            }
+            else if (current_semester == 6) //sixth semester
+            {
+                 com = strcmp(Get_Status_of(studentID, "BA304-Linear-Algebra"), "Passed");
+            int com2 = strcmp(Get_Status_of(studentID, "CS143-Introduction-to-Problem-Solving-and-Programming"), "Passed");
+            if (com == 1 && com2 == 1)
+                printf("1-CS301-Numerical-Methods\n");
+
+            com = strcmp(Get_Status_of(studentID, "BA203-Probability-and-Statistics"), "Passed");
+             com2 = strcmp(Get_Status_of(studentID, "CS243-Object-Oriented-Programming"), "Passed");
+            if (com == 1 && com2 == 1)
+            printf("2-CS305-System-Modeling-and-Simulation\n");
+
+            com = strcmp(Get_Status_of(studentID, "CS212-Data-Structures-and-Algorithms"), "Passed");
+            if (com == 1)
+            printf("3-CS312-Computing-Algorithms\n");
+
+            com = strcmp(Get_Status_of(studentID, "CS212-Data-Structures-and-Algorithms"), "Passed");
+            com2 = strcmp(Get_Status_of(studentID, "CS243-Object-Oriented-Programming"), "Passed");
+            if (com == 1 && com2 == 1)
+             printf("4-CS322-Operating-Systems\n");
+
+            com = strcmp(Get_Status_of(studentID, "CS212-Data-Structures-and-Algorithms"), "Passed");
+            com2 = strcmp(Get_Status_of(studentID, "CS202-Discrete-Structures"), "Passed");
+            if (com == 1 && com2 == 1)
+            printf("5-CS366-Introduction-to-Artificial-Intelligence\n");
+            }
+
+             fclose(fptr);
+                break;
+            }
+
+
+        
+        
+
+
+
+
+
+
+
+else{
+            printf("You are allowed to register 4 Courses Maximum\n");
+            char *period = Get_Period(studentID);
+            if (period != NULL)
+            {
+                int semester = atoi(period);
+                current_semester = semester + 1;
+                printf("Current semester: %d\n", current_semester);
+            }
+                       if (current_semester == 2) // Second semester
+            {
+                com = strcmp(Get_Status_of(studentID, "BA101-Calculus-1"), "Passed");
+                printf("%d\n", com);
+                if (com == 1)
+                    printf("1-BA102-Calculus-2\n");
+                
+                com = strcmp(Get_Status_of(studentID, "CS111-Introduction-to-Computers"), "Passed");
+                if (com == 1)
+                    printf("2-CS143-Introduction to problem solving and programming\n");
+                
+                com = strcmp(Get_Status_of(studentID, "BA113-Physics"), "Passed");
+                if (com == 1)
+                    printf("3-EC134-Fundamentals of Electronics\n");
+                
+                com = strcmp(Get_Status_of(studentID,"LH135-English-for-Specific-Purposes-I(ESP-I)"), "Passed");
+                if (com == 1)
+                    printf("4-LH136-English for Specific Purposes II(ESP II)\n5-NC133-Communication Skills\n");
+            }
+            else if (current_semester == 3) // Third semester
+            {
+             com = strcmp(Get_Status_of(studentID, "BA102-Calculus-2"), "Passed");
+             if (com == 1)
+             printf("1-BA102-Calculus-3\n2-BA203-Probability-and-Statistics\n");
+
+             com = strcmp(Get_Status_of(studentID, "BA113-Physics"), "Passed");
+             if (com == 1)
+            printf("3-BA216-Advanced-Physics\n");
+
+             com = strcmp(Get_Status_of(studentID, "CS111-Introduction-to-Computers"), "Passed");
+            if (com == 1)
+            printf("4-CE216-Digital-Logic-Design\n5-CS202-Discrete-Structures\n");
+
+            com = strcmp(Get_Status_of(studentID, "CS143-Introduction-to-Problem-Solving-and-Programming"), "Passed");
+            if (com == 1)
+            printf("6-CS243-Object-Oriented-Programming\n");
+            }
+            else if (current_semester == 4) // Fourth semester
+            {
+             com = strcmp(Get_Status_of(studentID, "CS143-Introduction-to-Problem-Solving-and-Programming"), "Passed");
+            if (com == 1)
+            printf("1-Introduction-to-Networks\n2-Database-Systems\n");
+
+            com = strcmp(Get_Status_of(studentID, "CE216-Digital-Logic-Design"), "Passed");
+            if (com == 1)
+            printf("3-CE243-Intro.-to-Computer-Architecture\n");
+
+            com = strcmp(Get_Status_of(studentID, "CS243-Object-Oriented-Programming"), "Passed");
+            if (com == 1)
+            printf("4-CS212-Data-Structures-and-Algorithms\n5-CS24-Advanced-Programming-Applications\n");
+
+            com = strcmp(Get_Status_of(studentID, "CS243-Object-Oriented-Programming"), "Passed");
+            int com2 = strcmp(Get_Status_of(studentID, "IS171-Introduction-to-Information-systems"), "Passed");
+            if (com == 1 && com2 == 1)
+            printf("6-SE291-Introduction-to-Software-Engineering\n");
+
+            printf("7-IT291-Professional-Training-in-Entrepreneurship\n");
+             }
+            else if (current_semester == 5) // fifth semester
+            {
+             com = strcmp(Get_Status_of(studentID, "BA203-Probability-and-Statistics"), "Passed");
+            if (com == 1)
+             printf("1-BA301-Advanced-Statistics\n");
+
+            com = strcmp(Get_Status_of(studentID, "BA102-Calculus-2"), "Passed");
+            if (com == 1)
+            printf("2-BA304-Linear-Algebra\n");
+
+            com = strcmp(Get_Status_of(studentID, "CS202-Discrete-Structures"), "Passed");
+            if (com == 1)
+            printf("3-CS311-Theory-of-Computation\n");
+
+            com = strcmp(Get_Status_of(studentID, "CS243-Object-Oriented-Programming"), "Passed");
+            int com2 = strcmp(Get_Status_of(studentID, "CE243-Intro.-to-Computer-Architecture"), "Passed");
+            if (com == 1 && com2 == 1)
+            printf("4-CS321-Systems-Programming\n");
+
+            com = strcmp(Get_Status_of(studentID, "IS273-Database-Systems"), "Passed");
+            if (com == 1)
+            printf("5-CS333-Web-Programming\n");
+
+            com = strcmp(Get_Status_of(studentID, "CS212-Data-Structures-and-Algorithms"), "Passed");
+            if (com == 1)
+            printf("6-CS352-Computer-Graphics\n");
+
+            printf("7-IT321-Professional-Training-in-Programming-I-(.Net-1)\n");
+            }
+            else if (current_semester == 6) //sixth semester
+            {
+                 com = strcmp(Get_Status_of(studentID, "BA304-Linear-Algebra"), "Passed");
+            int com2 = strcmp(Get_Status_of(studentID, "CS143-Introduction-to-Problem-Solving-and-Programming"), "Passed");
+            if (com == 1 && com2 == 1)
+                printf("1-CS301-Numerical-Methods\n");
+
+            com = strcmp(Get_Status_of(studentID, "BA203-Probability-and-Statistics"), "Passed");
+             com2 = strcmp(Get_Status_of(studentID, "CS243-Object-Oriented-Programming"), "Passed");
+            if (com == 1 && com2 == 1)
+            printf("2-CS305-System-Modeling-and-Simulation\n");
+
+            com = strcmp(Get_Status_of(studentID, "CS212-Data-Structures-and-Algorithms"), "Passed");
+            if (com == 1)
+            printf("3-CS312-Computing-Algorithms\n");
+
+            com = strcmp(Get_Status_of(studentID, "CS212-Data-Structures-and-Algorithms"), "Passed");
+            com2 = strcmp(Get_Status_of(studentID, "CS243-Object-Oriented-Programming"), "Passed");
+            if (com == 1 && com2 == 1)
+             printf("4-CS322-Operating-Systems\n");
+
+            com = strcmp(Get_Status_of(studentID, "CS212-Data-Structures-and-Algorithms"), "Passed");
+            com2 = strcmp(Get_Status_of(studentID, "CS202-Discrete-Structures"), "Passed");
+            if (com == 1 && com2 == 1)
+            printf("5-CS366-Introduction-to-Artificial-Intelligence\n");
+            }
+
+             fclose(fptr);
+                break;
+            }
+
+}
+// switch (Current_semester) {char *period = Get_Period(studentID);
+// int Current_semester;
+    
+    
+    
+    // printf("Enter Your Regestiration Number: ");
+    // scanf("%d", &studentID);
+    // printf("Enter Your PIN: ");
+    // scanf("%d", &PIN);
+    // printf("Retrieved student information: %s\n", Get_GPA(studentID));
+    // printf("Enter Your Regestiration Number: ");
+    // scanf("%d", &studentID);
+    // printf("Enter Your PIN: ");
+    // scanf("%d", &PIN);
+    // printf("Enter Your Regestiration Number: ");
+    // scanf("%d", &studentID);
+    // printf("Enter Your PIN: ");
+    // scanf("%d", &PIN);
+    // printf("Retrieved student information: %s\n", Get_GPA(studentID));
+    // printf("Enter Your Regestiration Number: ");
+    // scanf("%d", &studentID);
+    // printf("Enter Your PIN: ");
+    // scanf("%d", &PIN);
+    // printf("%s", Get_PIN(studentID));
+    // printf("%s",Get_Status_of(studentID,"BA102-Calculus-2"));
+
+    // int pinD = atoi(Get_PIN(studentID));// atoi turns the retrieved pin(pointer) into pin(integer) to be able to do a comparison inside if condition.
+    // char *info = Student_info(studentID);
+    // printf("Retrieved student information: %s\n", info);
+    // if (PIN==pinD)
+    // {
+    //     printf("VALID\n");
+    //     printf("Retrieved student information: %s\n", info);
+    //     /* code */
+    // }
+
+// if (period != NULL) {
+//     int semester = atoi(period);
+//     Current_semester = semester + 1;
+//     printf("Current semester: %d\n", Current_semester);
+// } 
+//     case 3:
+// printf("%s\n",Get_Status_of(studentID,"BA101-Calculus-1"));
+//     int com = strcmp(Get_Status_of(studentID,"BA101-Calculus-1"), "Passed");
+//         printf("%d\n",com);
+//         if (com == 1){
+//             printf("1-BA102-Calculus-3\n2-BA203-Probability and Statistics\n");}
+//         if (strcmp(Get_Status_of(studentID,"BA113-Physics"), "Passed") == 0)
+//             printf("3-BA216-Advanced Physics\n");
+//         if (strcmp(Get_Status_of(studentID,"CS111-Introduction-to-Computers"), "Passed") == 0)
+//             printf("4-CE216-Digital Logic Design\n5-CS202-Discrete Structures\n");
+//         if (strcmp(Get_Status_of(studentID,"CS143-Introduction to problem solving and programming"), "Passed") == 0)
+//             printf("6-CS243-Object Oriented Programming\n");
+        // break;
+    
+
+
+
+    
+
+ 
+    }
+    return 0;
+}
+
+
+//choiceose from these:  
 //         //semester 1
 // "BA003-Math-0",
 // "BA101-Calculus-1",
@@ -366,13 +774,74 @@ char* Get_Status_of(int id, char* course) {
 // "CS432-Network-Protocols-&-Programming",
 // "CS460_Deep-Learning",
 // "SE496-Software-Engineering-Process",
-// "IT412-Professional-Training-in-Software-Testing-3"
-int main()
-{
-    printf("Enter Your Regestiration Number: ");
-    scanf("%d", &studentID);
-    printf("Enter Your PIN: ");
-    scanf("%d", &PIN);
-    printf("Retrieved student information: %s\n", Get_GPA(studentID));
-    return 0;
-}
+// "IT412-Professional-Training-in-Software-Testing-3"}
+
+
+
+//    int Current_semester = atoi(Get_Period(studentID)) + 1;
+//     switch (Current_semester)
+//     {
+    // case 2:
+    //     if (Get_Status_of(studentID, "BA101-Calculus-1") == "Passed")
+    //         printf("1-BA102-Calculus-2\n)");
+    //     if (Get_Status_of(studentID, "CS111-Introduction-to-Computers") == "Passed")
+    //         printf("2-CS143-Introduction to problem solving and programming\n");
+    //     if (Get_Status_of(studentID, "BA113-Physics") == "Passed")
+    //         printf("3-EC134-Fundamentals of Electronics\n");
+    //     if (Get_Status_of(studentID, "LH135-English for Specific Purposes I (ESP I)") == "Passed")
+    //         printf("4-LH136-English for Specific Purposes II(ESP II)\n5-NC133-Communication Skills\n");
+    //     break;
+//     case 3:
+// if (strcmp(Get_Status_of(studentID, "BA101-Calculus-1"), "Passed") == 0)
+//             printf("1-BA102-Calculus-3\n2-BA203-Probability and Statistics");
+//         if (strcmp(Get_Status_of(studentID, "BA113-Physics"), "Passed") == 0)
+//             printf("3-BA216-Advanced Physics\n");
+//         if (strcmp(Get_Status_of(studentID, "CS111-Introduction-to-Computers"),"Passed")== 0)
+//             printf("4-CE216-Digital Logic Design\n5-CS202-Discrete Structures\n");
+//         if (strcmp(Get_Status_of(studentID, "CS143-Introduction to problem solving and programming"),"Passed") == 0)
+//             printf("6-CS243-Object Oriented Programming\n");
+//         break;
+    // case 4:
+    //     if (Get_Status_of(studentID, "CS143-Introduction to problem solving and programming") == "Passed")
+    //         printf("1-Introduction to Networks\n2-Database Systems\n");
+    //     if (Get_Status_of(studentID, "CE216-Digital Logic Design")== "Passed")
+    //         printf("3-CE243-Intro. to Computer Architecture\n");
+    //     if (Get_Status_of(studentID, "CS243-Object Oriented Programming") == "Passed")
+    //         printf("4-CS212-Data Structures and Algorithms\n5-CS24-Advanced Programming Applications\n");
+    //     if (Get_Status_of(studentID, "CS243-Object Oriented Programming") == "Passed" && Get_Status_of(studentID, "IS171-Introduction to Information systems") == "Passed")
+    //         printf("6-SE291-Introduction to Software Engineering\n");
+    //     printf("7-IT291-Professional Training in Entrepreneurship\n");
+    //     break;
+    // case 5:
+    //     if (Get_Status_of(studentID, "BA203-Probability and Statistics") == "Passed")
+    //         printf("1-BA301-Advanced Statistics\n");
+    //     if (Get_Status_of(studentID, "BA102-Calculus 2") == "Passed")
+    //         printf("2-BA304-Linear Algebra\n");
+    //     if (Get_Status_of(studentID, "CS202-Discrete Structures") == "Passed")
+    //         printf("3-CS311-Theory of Computation\n");
+    //     if (Get_Status_of(studentID, "CS243-Object Oriented Programming") == "Passed" && Get_Status_of(studentID, "CE243-Intro. to Computer Architecture") == "Passed")
+    //         printf("4-CS321-Systems Programming\n");
+    //     if (Get_Status_of(studentID, "IS273-Database Systems") == "Passed")
+    //         printf("5-CS333-Web Programming\n");
+    //     if (Get_Status_of(studentID, "CS212-Data Structures and Algorithms") == "Passed")
+    //         printf("6-CS352-Computer Graphics\n");
+    //     printf("7-IT321	Professional Training in Programming I (.Net 1)\n");
+    //     break;
+    // case 6:
+    //     if (Get_Status_of(studentID, "BA304-Linear Algebra") == "Passed" && Get_Status_of(studentID, "CS143-Introduction to Problem Solving and Programming") == "Passed")
+    //         printf("1-CS301-Numerical Methods\n");
+    //     if (Get_Status_of(studentID, "BA203-Probability and Statistics") == "Passed" && Get_Status_of(studentID, "CS243-Object Oriented Programming") == "Passed")
+    //         printf("2-CS305-System Modeling and Simulation\n");
+    //     if (Get_Status_of(studentID, "CS212-Data Structures and Algorithms") == "Passed")
+    //         printf("3-CS312-Computing Algorithms\n");
+    //     if (Get_Status_of(studentID, "CS212-Data Structures and Algorithms") == "Passed" && Get_Status_of(studentID, "CS243-Object Oriented Programming") == "Passed")
+    //         printf("4-CS322-Operating Systems\n");
+    //     if (Get_Status_of(studentID, "CS212-Data Structures and Algorithms") == "Passed" && Get_Status_of(studentID, "CS202-Discrete Structures") == "Passed")
+    //         printf("5-CS366-Introduction to Artificial Intelligence\n");
+    //     break;
+    // case 7:
+    // break;
+    // case 8:
+    // break;
+    //     }
+    // }
