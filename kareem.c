@@ -387,6 +387,7 @@ int main()
         o("Enter your Regisration Number: \n");
         l:s("%d", &Student_ID);
         o("Enter your pin: \n");
+        system("cls");
         m:s("%d", &PASS);
         FILE *fptr;
         fptr = fopen("Students.txt", "r");
